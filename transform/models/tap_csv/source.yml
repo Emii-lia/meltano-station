@@ -1,0 +1,12 @@
+config-version: 2
+version: 2
+sources:
+  - name: tap_csv     # the name we want to reference this source by
+    schema: tap_csv   # the schema the raw data was loaded into
+    tables:
+      - name: antananarivo
+      - name: antsiranana
+      - name: fianarantsoa
+      - name: majunga
+      - name: toamasina
+      - name: toliara
