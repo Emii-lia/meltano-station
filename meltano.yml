@@ -4,3 +4,49 @@ environments:
 - name: dev
 - name: staging
 - name: prod
+plugins:
+  extractors:
+  - name: tap-csv
+    variant: meltanolabs
+    pip_url: git+https://github.com/MeltanoLabs/tap-csv.git
+    config:
+      add_metadata_columns: true
+      files:
+      - entity: antananarivo
+        path: data/antananarivo.csv
+        keys: [_sdc_source_file, Mois]
+      - entity: antsiranana
+        path: data/antsiranana.csv
+        keys: [_sdc_source_file, Mois]
+      - entity: fianarantsoa
+        path: data/fianarantsoa.csv
+        keys: [_sdc_source_file, Mois]
+      - entity: majunga
+        path: data/majunga.csv
+        keys: [_sdc_source_file, Mois]
+      - entity: toamasina
+        path: data/toamasina.csv
+        keys: [_sdc_source_file, Mois]
+      - entity: toliara
+        path: data/toliara.csv
+        keys: [_sdc_source_file, Mois]
+  loaders:
+  - name: target-postgres
+    variant: meltanolabs
+    pip_url: meltanolabs-target-postgres
+    config:
+      user: meltano
+      database: meltano_station
+      add_record_metadata: true
+      host: localhost
+  utilities:
+  - name: dbt-postgres
+    variant: dbt-labs
+    pip_url: dbt-core dbt-postgres meltano-dbt-ext~=0.4.0
+    python: python3.13
+    config:
+      dbname: meltano_station
+      host: localhost
+      port: 5432
+      user: meltano
+      schema: analytics
