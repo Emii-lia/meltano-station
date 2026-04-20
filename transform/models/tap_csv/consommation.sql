@@ -1,6 +1,6 @@
 {{
   config(
-    materialized='table'
+    materialized='incremental'
   )
 }}
 
@@ -42,8 +42,8 @@ unpivoted as (
 dates_parsed as (
   select
     *,
-    extract(month from to_date("Mois", 'DD/MM/YY')) as month,
-    extract(year from to_date("Mois", 'DD/MM/YY')) as year
+    extract(month from to_date("Mois", 'DD/MM/YY')) as mois,
+    extract(year from to_date("Mois", 'DD/MM/YY')) as annee
   from unpivoted
 ),
 final as (
@@ -55,12 +55,13 @@ final as (
     dp.quantite
   from dates_parsed dp
   join analytics.date d
-    on d.month = dp.month
-   and d.year = dp.year
+    on d.mois = dp.mois
+   and d.annee = dp.annee
   join analytics.province p
     on p.nom = dp.province
   join analytics.carburant c
     on c.carburant_type = dp.carburant
+  order by id_consommation, id_province, id_date, id_carburant
 )
 
 select * from final
