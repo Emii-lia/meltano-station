@@ -1,6 +1,6 @@
 {{
   config(
-    materialized='incremental'
+    materialized='table'
   )
 }}
 
@@ -47,7 +47,7 @@ dates_parsed as (
   from unpivoted
 ),
 final as (
-  select
+  select distinct
     row_number() over () as id_consommation,
     d.id_date,
     p.id_province,
