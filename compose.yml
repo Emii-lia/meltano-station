@@ -1,0 +1,29 @@
+services:
+  postgres:
+    image: postgres:15.3-alpine
+    container_name: meltano_postgres
+    environment:
+      POSTGRES_USER: meltano
+      POSTGRES_PASSWORD: ${TARGET_POSTGRES_PASSWORD}
+      POSTGRES_DB: meltano_station
+    ports:
+      - "5432:5432"
+    env_file:
+      - .env
+
+  pipeline:
+    build: .
+    depends_on:
+      - postgres
+    volumes:
+      - ./data:/app/data
+      - ./:/app
+    develop:
+      watch:
+        - path: ./data
+          action: rebuild
+        - path: ./flows
+          action: rebuild
+    environment:
+      DATABASE_URL: postgres://meltano:meltano@postgres:5432/meltano_station
+    command: ["bash", "flows/run.sh"]
