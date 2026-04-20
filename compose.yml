@@ -27,3 +27,12 @@ services:
     environment:
       DATABASE_URL: postgres://meltano:meltano@postgres:5432/meltano_station
     command: ["bash", "flows/run.sh"]
+
+  metabase:
+    image: metabase/metabase:latest
+    container_name: meltano_metabase
+    ports:
+      - "3000:3000"
+    depends_on:
+      - postgres
+    restart: always
