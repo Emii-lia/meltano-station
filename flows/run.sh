@@ -2,5 +2,5 @@
 
 set -e
 
-echo "Extracting and loading data..."
-meltano run load_data
+echo "Extracting, loading and transforming data..."
+meltano run tap_csv_load_transform

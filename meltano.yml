@@ -50,6 +50,18 @@ plugins:
       port: 5432
       user: meltano
       schema: analytics
+  - name: metabase
+    variant: metabase
+    pip_url: metabase
+    executable: docker
+    commands:
+      run:
+        args: run -p 3000:3000 --name metabase metabase/metabase
+    settings:
+    - name: host
+      value: localhost
+    - name: port
+      value: 3000
 jobs:
 - name: tap_csv_load_transform
   tasks:
