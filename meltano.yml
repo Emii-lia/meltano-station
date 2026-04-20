@@ -38,7 +38,7 @@ plugins:
       user: meltano
       database: meltano_station
       add_record_metadata: true
-      host: localhost
+      host: postgres
   utilities:
   - name: dbt-postgres
     variant: dbt-labs
@@ -46,7 +46,27 @@ plugins:
     python: python3.13
     config:
       dbname: meltano_station
-      host: localhost
+      host: postgres
       port: 5432
       user: meltano
       schema: analytics
+jobs:
+- name: load_data
+  tasks:
+  - tap-csv target-postgres dbt-postgres:run
+- name: dbt_transform
+  tasks:
+  - dbt-postgres:run
+- name: dbt_test
+  tasks:
+  - dbt-postgres:test
+schedules:
+- name: monthly_stat_update
+  interval: '@monthly'
+  job: load_data
+- name: monthly_stat_transform
+  interval: '@monthly'
+  job: dbt_transform
+- name: monthly_dbt_test
+  interval: '@monthly'
+  job: dbt_test
