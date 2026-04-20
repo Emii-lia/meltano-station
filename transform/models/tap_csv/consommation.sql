@@ -42,24 +42,24 @@ unpivoted as (
 dates_parsed as (
   select
     *,
-    extract(month from to_date("Mois", 'DD/MM/YY')) as mois,
+    trim(to_char(to_date("Mois", 'DD/MM/YY'), 'Month')) as mois,
     extract(year from to_date("Mois", 'DD/MM/YY')) as annee
   from unpivoted
 ),
 final as (
   select
-    row_number() over () as id_consomation,
+    row_number() over () as id_consommation,
     d.id_date,
     p.id_province,
     c.id_carburant,
     dp.quantite
   from dates_parsed dp
-  join analytics.date d
+  join {{ ref('date') }} d
     on d.mois = dp.mois
    and d.annee = dp.annee
-  join analytics.province p
+  join {{ ref('province') }} p
     on p.nom = dp.province
-  join analytics.carburant c
+  join {{ ref('carburant') }} c
     on c.carburant_type = dp.carburant
   order by id_consommation, id_province, id_date, id_carburant
 )
