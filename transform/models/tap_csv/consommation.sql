@@ -5,17 +5,17 @@
 }}
 
 with provinces as (
-  select "Mois","GAZ(T)","EA","JET","NAPHTA","PL","GO","FO", 'antananarivo' as province from tap_csv.antananarivo
+  select "Mois","GAZ(T)","EA","JET","SC","NAPHTA","PL","GO","FO", 'antananarivo' as province from tap_csv.antananarivo
   union all
-  select "Mois","GAZ(T)","EA","JET","NAPHTA","PL","GO","FO", 'antsiranana' from tap_csv.antsiranana
+  select "Mois","GAZ(T)","EA","JET","SC","NAPHTA","PL","GO","FO", 'antsiranana' from tap_csv.antsiranana
   union all
-  select "Mois","GAZ(T)","EA","JET","NAPHTA","PL","GO","FO", 'toamasina' from tap_csv.toamasina
+  select "Mois","GAZ(T)","EA","JET","SC","NAPHTA","PL","GO","FO", 'toamasina' from tap_csv.toamasina
   union all
-  select "Mois","GAZ(T)","EA","JET","NAPHTA","PL","GO","FO", 'majunga' from tap_csv.majunga
+  select "Mois","GAZ(T)","EA","JET","SC","NAPHTA","PL","GO","FO", 'majunga' from tap_csv.majunga
   union all
-  select "Mois","GAZ(T)","EA","JET","NAPHTA","PL","GO","FO", 'toliara' from tap_csv.toliara
+  select "Mois","GAZ(T)","EA","JET","SC","NAPHTA","PL","GO","FO", 'toliara' from tap_csv.toliara
   union all
-  select "Mois","GAZ(T)","EA","JET","NAPHTA","PL","GO","FO", 'fianarantsoa' from tap_csv.fianarantsoa
+  select "Mois","GAZ(T)","EA","JET","SC","NAPHTA","PL","GO","FO", 'fianarantsoa' from tap_csv.fianarantsoa
 ),
 
 unpivoted as (
@@ -23,21 +23,23 @@ unpivoted as (
     "Mois",
     province,
     'GAZ(T)' as carburant,
-    "GAZ(T)" as quantite
+    CAST("GAZ(T)" AS NUMERIC) as quantite
   from provinces
 
   union all
-  select "Mois", province, 'EA', "EA" from provinces
+  select "Mois", province, 'EA', CAST("EA" AS NUMERIC) from provinces
   union all
-  select "Mois", province, 'JET', "JET" from provinces
+  select "Mois", province, 'JET', CAST("JET" AS NUMERIC) from provinces
   union all
-  select "Mois", province, 'NAPHTA', "NAPHTA" from provinces
+  select "Mois", province, 'SC', CAST("SC" AS NUMERIC) from provinces
   union all
-  select "Mois", province, 'PL', "PL" from provinces
+  select "Mois", province, 'NAPHTA', CAST("NAPHTA" AS NUMERIC) from provinces
   union all
-  select "Mois", province, 'GO', "GO" from provinces
+  select "Mois", province, 'PL', CAST("PL" AS NUMERIC) from provinces
   union all
-  select "Mois", province, 'FO', "FO" from provinces
+  select "Mois", province, 'GO', CAST("GO" AS NUMERIC) from provinces
+  union all
+  select "Mois", province, 'FO', CAST("FO" AS NUMERIC) from provinces
 ),
 dates_parsed as (
   select
